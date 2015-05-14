@@ -2,11 +2,11 @@ local Carpets = {}
 local PLUGIN
 
 function Initialize( Plugin )
-	Plugin:SetName( "MagicCarpet" )
-	Plugin:SetVersion( 2 )
+	Plugin:SetName("MagicCarpet")
+	Plugin:SetVersion(3)
 
-	cPluginManager.AddHook(cPluginManager.HOOK_PLAYER_MOVING, OnPlayerMoving)
-	cPluginManager.AddHook(cPluginManager.HOOK_PLAYER_DESTROYED, OnDisconnect)
+	cPluginManager.AddHook(cPluginManager.HOOK_PLAYER_MOVING,    OnPlayerMoving)
+	cPluginManager.AddHook(cPluginManager.HOOK_PLAYER_DESTROYED, OnPlayerDestroyed)
 	
 	local PluginManager = cPluginManager:Get()
 	PluginManager:BindCommand("/mc", "magiccarpet", HandleCarpetCommand, " - Spawns a magical carpet");
@@ -32,7 +32,7 @@ end
 
 
 
-function HandleCarpetCommand( Split, Player )
+function HandleCarpetCommand(Split, Player)
 	Carpet = Carpets[ Player:GetUUID() ]
 	
 	if( Carpet == nil ) then
@@ -52,12 +52,12 @@ end
 
 
 
-function OnDisconnect( Reason, Player )
-	local Carpet = Carpets[ Player:GetUUID() ]
-	if( Carpet ~= nil )	 then
+function OnPlayerDestroyed(a_Player)
+	local Carpet = Carpets[a_Player:GetUUID()]
+	if (Carpet) then
 		Carpet:remove()
 	end
-	Carpets[ Player:GetUUID() ] = nil
+	Carpets[a_Player:GetUUID()] = nil
 end
 
 
