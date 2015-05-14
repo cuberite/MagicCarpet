@@ -33,15 +33,15 @@ end
 
 
 function HandleCarpetCommand( Split, Player )
-	Carpet = Carpets[ Player ]
+	Carpet = Carpets[ Player:GetUUID() ]
 	
 	if( Carpet == nil ) then
-		Carpets[ Player ] = cCarpet:new()
+		Carpets[ Player:GetUUID() ] = cCarpet:new()
 		Player:SendMessageSuccess("You're on a magic carpet!")
 		Player:SendMessageInfo("Look straight down to descend. Jump to ascend.")
 	else
 		Carpet:remove()
-		Carpets[ Player ] = nil
+		Carpets[ Player:GetUUID() ] = nil
 		Player:SendMessageSuccess("The carpet vanished!")
 	end
 
@@ -53,11 +53,11 @@ end
 
 
 function OnDisconnect( Reason, Player )
-	local Carpet = Carpets[ Player ]
+	local Carpet = Carpets[ Player:GetUUID() ]
 	if( Carpet ~= nil )	 then
 		Carpet:remove()
 	end
-	Carpets[ Player ] = nil
+	Carpets[ Player:GetUUID() ] = nil
 end
 
 
@@ -65,7 +65,7 @@ end
 
 
 function OnPlayerMoving(Player)
-	local Carpet = Carpets[ Player ]
+	local Carpet = Carpets[ Player:GetUUID() ]
 	if( Carpet == nil ) then
 		return
 	end
