@@ -1,97 +1,95 @@
 -- Location object
 cLocation = {}
-function cLocation:new( x, y, z )
-	local object = { x = x, y = y, z = z }
+function cLocation:New(X, Y, Z)
+	local object = {
+		X = X,
+		Y = Y,
+		Z = Z
+	}
 	setmetatable(object, { __index = cLocation })
 	return object
 end
 
 -- Offsets
-cFibers = { }
-function cFibers:new()
+cFibers = {}
+function cFibers:New()
 	local object = {
-						cLocation:new( 2, -1, 2 ),
-						cLocation:new( 2, -1, 1 ),
-						cLocation:new( 2, -1, 0 ),
-						cLocation:new( 2, -1, -1 ),
-						cLocation:new( 2, -1, -2 ),
-						cLocation:new( 1, -1, 2 ),
-						cLocation:new( 1, -1, 1 ),
-						cLocation:new( 1, -1, 0 ),
-						cLocation:new( 1, -1, -1 ),
-						cLocation:new( 1, -1, -2 ),
-						cLocation:new( 0, -1, 2 ),
-						cLocation:new( 0, -1, 1 ),
-						cLocation:new( 0, -1, 0 ),
-						cLocation:new( 0, -1, -1 ),
-						cLocation:new( 0, -1, -2 ),
-						cLocation:new( -1, -1, 2 ),
-						cLocation:new( -1, -1, 1 ),
-						cLocation:new( -1, -1, 0 ),
-						cLocation:new( -1, -1, -1 ),
-						cLocation:new( -1, -1, -2 ),
-						cLocation:new( -2, -1, 2 ),
-						cLocation:new( -2, -1, 1 ),
-						cLocation:new( -2, -1, 0 ),
-						cLocation:new( -2, -1, -1 ),
-						cLocation:new( -2, -1, -2 ),
-						imadeit = false,
-					}
+		cLocation:New(2, -1, 2),
+		cLocation:New(2, -1, 1),
+		cLocation:New(2, -1, 0),
+		cLocation:New(2, -1, -1),
+		cLocation:New(2, -1, -2),
+		cLocation:New(1, -1, 2),
+		cLocation:New(1, -1, 1),
+		cLocation:New(1, -1, 0),
+		cLocation:New(1, -1, -1),
+		cLocation:New(1, -1, -2),
+		cLocation:New(0, -1, 2),
+		cLocation:New(0, -1, 1),
+		cLocation:New(0, -1, 0),
+		cLocation:New(0, -1, -1),
+		cLocation:New(0, -1, -2),
+		cLocation:New(-1, -1, 2),
+		cLocation:New(-1, -1, 1),
+		cLocation:New(-1, -1, 0),
+		cLocation:New(-1, -1, -1),
+		cLocation:New(-1, -1, -2),
+		cLocation:New(-2, -1, 2),
+		cLocation:New(-2, -1, 1),
+		cLocation:New(-2, -1, 0),
+		cLocation:New(-2, -1, -1),
+		cLocation:New(-2, -1, -2),
+		imadeit = false
+	}
 	setmetatable(object, { __index = cFibers })
-	return object;
+	return object
 end
 
 -- Carpet object
 cCarpet = {}
-function cCarpet:new()
-	local object = {	Location = cLocation:new(0,0,0),
-						Fibers = cFibers:new(),
-					}
+function cCarpet:New()
+	local object = {
+		Location = cLocation:New(0, 0, 0),
+		Fibers = cFibers:New()
+	}
 	setmetatable(object, { __index = cCarpet })
 	return object
 end
 
-function cCarpet:remove()
-	local World = cRoot:Get():GetDefaultWorld()
-	for i, fib in ipairs( self.Fibers ) do
-		local x = self.Location.x + fib.x
-		local y = self.Location.y + fib.y
-		local z = self.Location.z + fib.z
-		local BlockID = World:GetBlock( x, y, z )
-		if( fib.imadeit == true and BlockID == E_BLOCK_GLASS ) then
-			World:SetBlock( x, y, z, 0, 0 )
+function cCarpet:Remove()
+	for i, fib in ipairs(self.Fibers) do
+		local X = self.Location.X + fib.X
+		local Y = self.Location.Y + fib.Y
+		local Z = self.Location.Z + fib.Z
+		local BlockID = World:GetBlock(X, Y, Z)
+		if fib.imadeit == true and BlockID == E_BLOCK_GLASS then
+			World:SetBlock(X, Y, Z, E_BLOCK_AIR, 0)
 			fib.imadeit = false
 		end
 	end
 end
 
-function cCarpet:draw()
-	local World = cRoot:Get():GetDefaultWorld()
-	for i, fib in ipairs( self.Fibers ) do
-		local x = self.Location.x + fib.x
-		local y = self.Location.y + fib.y
-		local z = self.Location.z + fib.z
-		local BlockID = World:GetBlock( x, y, z )
-		if( BlockID == 0  ) then
+function cCarpet:Draw()
+	for i, fib in ipairs(self.Fibers) do
+		local X = self.Location.X + fib.X
+		local Y = self.Location.Y + fib.Y
+		local Z = self.Location.Z + fib.Z
+		local BlockID = World:GetBlock(X, Y, Z)
+		if BlockID == E_BLOCK_AIR then
+			World:SetBlock(X, Y, Z, E_BLOCK_GLASS, 0)
 			fib.imadeit = true
-			World:SetBlock( x, y, z, E_BLOCK_GLASS, 0 )
 		else
 			fib.imadeit = false
 		end
 	end
 end
 
-function cCarpet:moveTo( NewPos )
-	local x = math.floor( NewPos.x )
-	local y = math.floor( NewPos.y )
-	local z = math.floor( NewPos.z )
-	if( self.Location.x ~= x or self.Location.y ~= y or self.Location.z ~= z ) then
-		self:remove()
-		self.Location = cLocation:new( x, y, z )
-		self:draw()
-	end
+function cCarpet:MoveTo(NewPos)
+	self:Remove()
+	self.Location = cLocation:New(math.floor(NewPos.X), math.floor(NewPos.Y), math.floor(NewPos.Z))
+	self:Draw()
 end
 
-function cCarpet:getY()
-	return self.Location.y
+function cCarpet:GetPosY()
+	return self.Location.Y
 end
