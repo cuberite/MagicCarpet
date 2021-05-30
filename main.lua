@@ -11,7 +11,7 @@ function Initialize(Plugin)
 	dofile(cPluginManager:GetPluginsPath() .. "/InfoReg.lua")
 	RegisterPluginInfoCommands()
 	
-	LOG("Initialised " .. Plugin:GetName())
+	LOG("Initialised!")
 	return true
 end
 
@@ -67,7 +67,7 @@ function OnPlayerMoving(Player)
 end
 
 function OnDisable()
-	LOG("Disabled " .. cPluginManager:GetCurrentPlugin():GetName() .. "!")
+	LOG("Disabling...")
 	for i, Carpet in pairs(Carpets) do
 		Carpet:Remove()
 	end
