@@ -61,9 +61,10 @@ function cCarpet:Remove()
 		local X = self.Location.X + fib.X
 		local Y = self.Location.Y + fib.Y
 		local Z = self.Location.Z + fib.Z
-		local BlockID = World:GetBlock(X, Y, Z)
+		local Position = Vector3i(X, Y, Z)
+		local BlockID = World:GetBlock(Position)
 		if fib.imadeit == true and BlockID == E_BLOCK_GLASS then
-			World:SetBlock(X, Y, Z, E_BLOCK_AIR, 0)
+			World:SetBlock(Position, E_BLOCK_AIR, 0)
 			fib.imadeit = false
 		end
 	end
@@ -74,9 +75,10 @@ function cCarpet:Draw()
 		local X = self.Location.X + fib.X
 		local Y = self.Location.Y + fib.Y
 		local Z = self.Location.Z + fib.Z
-		local BlockID = World:GetBlock(X, Y, Z)
+		local Position = Vector3i(X, Y, Z)
+		local BlockID = World:GetBlock(Position)
 		if BlockID == E_BLOCK_AIR then
-			World:SetBlock(X, Y, Z, E_BLOCK_GLASS, 0)
+			World:SetBlock(Position, E_BLOCK_GLASS, 0)
 			fib.imadeit = true
 		else
 			fib.imadeit = false
